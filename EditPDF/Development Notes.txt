@@ -1,0 +1,1 @@
+﻿The .NET documentation for iText can be found at https://api.itextpdf.com/iText7/dotnet/latest/ .

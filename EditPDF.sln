@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditPDF", "EditPDF\EditPDF.csproj", "{B4ACFF10-1D7F-43EB-BE37-42426F2BE5C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hlpCode", "hlpCode\hlpCode.csproj", "{7FAEA46C-781B-4A40-9BB8-F14C040AB369}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4ACFF10-1D7F-43EB-BE37-42426F2BE5C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4ACFF10-1D7F-43EB-BE37-42426F2BE5C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4ACFF10-1D7F-43EB-BE37-42426F2BE5C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4ACFF10-1D7F-43EB-BE37-42426F2BE5C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FAEA46C-781B-4A40-9BB8-F14C040AB369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FAEA46C-781B-4A40-9BB8-F14C040AB369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FAEA46C-781B-4A40-9BB8-F14C040AB369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FAEA46C-781B-4A40-9BB8-F14C040AB369}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE151101-0356-4349-9A75-9B29C79AF7B4}
+	EndGlobalSection
+EndGlobal
