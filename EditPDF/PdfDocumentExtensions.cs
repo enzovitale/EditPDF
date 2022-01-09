@@ -16,9 +16,9 @@ namespace EditPDF
     public static class PdfDocumentExtensions
     {
         public static PdfDocument GetReadOnlyPdfDocument(
-            string sourceFileFullName
+            string sourceFileFullPath
         )
-            => new(new PdfReader(sourceFileFullName));
+            => new(new PdfReader(sourceFileFullPath));
 
         public static PdfDocument GetReadOnlyPdfDocument(
             string sourceFolderPath,
@@ -27,12 +27,12 @@ namespace EditPDF
             => GetReadOnlyPdfDocument(Path.Combine(sourceFolderPath, sourceFileName));
 
         public static PdfDocument GetReadWritePdfDocument(
-            string sourceFileFullName,
-            string destinationFileFullName
+            string sourceFileFullPath,
+            string destinationFileFullPath
         )
             => new(
-                new PdfReader(sourceFileFullName),
-                new PdfWriter(destinationFileFullName)
+                new PdfReader(sourceFileFullPath),
+                new PdfWriter(destinationFileFullPath)
             );
         public static PdfDocument GetReadWritePdfDocument(
             string sourceAndDestinationFolderPath,
@@ -45,9 +45,9 @@ namespace EditPDF
             );
 
         public static PdfDocument GetWriteOnlyPdfDocument(
-            string destinationFileFullName
+            string destinationFileFullPath
         )
-            => new(new PdfWriter(destinationFileFullName));
+            => new(new PdfWriter(destinationFileFullPath));
         public static PdfDocument GetWriteOnlyPdfDocument(
             string destinationFolderPath,
             string destinationFileName
@@ -100,12 +100,12 @@ namespace EditPDF
             pdfDoc.Close();
         }
         public static void ResizeImages(
-            string sourceFileFullName,
+            string sourceFileFullPath,
             double resizeFactor
         )
         {
-            var sourceAndDestinationFolderPath = new FileInfo(sourceFileFullName).Directory.FullName;
-            var sourceFileName = new FileInfo(sourceFileFullName).Name;
+            var sourceAndDestinationFolderPath = new FileInfo(sourceFileFullPath).Directory.FullName;
+            var sourceFileName = new FileInfo(sourceFileFullPath).Name;
             var pdfDoc = GetReadWritePdfDocument(sourceAndDestinationFolderPath, sourceFileName, sourceFileName.Replace(".pdf", ".resized.pdf"));
             pdfDoc.ResizeImages(resizeFactor);
             pdfDoc.Close();
@@ -194,19 +194,19 @@ namespace EditPDF
 
 
         public static void ExtractPages(
-            string sourceFileFullName,
-            string destinationFileFullName,
+            string sourceFileFullPath,
+            string destinationFileFullPath,
             params int[] pageNumbers
-        ) => ExtractPages(sourceFileFullName, destinationFileFullName, pageNumbers.AsEnumerable());
+        ) => ExtractPages(sourceFileFullPath, destinationFileFullPath, pageNumbers.AsEnumerable());
 
         public static void ExtractPages(
-            string sourceFileFullName,
-            string destinationFileFullName,
+            string sourceFileFullPath,
+            string destinationFileFullPath,
             IEnumerable<int> pageNumbers
         )
         {
-            var sourceDoc = GetReadOnlyPdfDocument(sourceFileFullName);
-            var destinationDoc = GetWriteOnlyPdfDocument(destinationFileFullName);
+            var sourceDoc = GetReadOnlyPdfDocument(sourceFileFullPath);
+            var destinationDoc = GetWriteOnlyPdfDocument(destinationFileFullPath);
 
             sourceDoc.CopyPagesTo(pageNumbers.ToList(), destinationDoc);
 
@@ -239,19 +239,19 @@ namespace EditPDF
 
 
         public static void RotatePages(
-            string sourceFileFullName,
-            string destinationFileFullName,
+            string sourceFileFullPath,
+            string destinationFileFullPath,
             int angle,
             params int[] pageNumbers
-        ) => RotatePages(sourceFileFullName, destinationFileFullName, angle, pageNumbers.AsEnumerable());
+        ) => RotatePages(sourceFileFullPath, destinationFileFullPath, angle, pageNumbers.AsEnumerable());
         public static void RotatePages(
-            string sourceFileFullName,
-            string destinationFileFullName,
+            string sourceFileFullPath,
+            string destinationFileFullPath,
             int angle,
             IEnumerable<int> pageNumbers
         )
         {
-            var pdfDoc = GetReadWritePdfDocument(sourceFileFullName, destinationFileFullName);
+            var pdfDoc = GetReadWritePdfDocument(sourceFileFullPath, destinationFileFullPath);
 
             foreach (int p in pageNumbers)
             {

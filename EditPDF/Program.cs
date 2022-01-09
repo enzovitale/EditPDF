@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using iText.IO.Font.Constants;
 using iText.IO.Image;
@@ -18,13 +19,14 @@ namespace EditPDF
         {
             Console.WriteLine("Hello World!");
 
-            if (false) MergeDocuments();
             if (false) ResizeImagesInDocument();
-            if (false) DumpImagesInDocument();
+            if (false) DumpImagesFromDocument();
             if (false) CreateNewDocument();
-            if (false) DumpTextInDocument();
+            if (false) DumpTextFromDocument();
             if (false) ExtractPagesFromDocument();
-            RotatePagesFromDocument();
+            if (false) RotatePagesFromDocument();
+            if (false) MergeDocuments();
+            MergeEvenAndOddPages();
         }
 
         public static void CreateNewDocument()
@@ -70,22 +72,6 @@ namespace EditPDF
         }
 
 
-        public static void MergeDocuments()
-        {
-            var SourceAndDestinationFolderPath = @"D:\personal\";
-
-            PdfMergerExtensions.MergeDocumentsInFolder(
-                SourceAndDestinationFolderPath,
-
-                "dest.pdf",
-
-                "source003.pdf",
-                "source004.pdf",
-                "source005.pdf"
-            );
-        }
-
-
         public static void ResizeImagesInDocument()
         {
             var FolderPath = @"D:\personal\";
@@ -97,7 +83,7 @@ namespace EditPDF
         }
 
 
-        public static void DumpImagesInDocument()
+        public static void DumpImagesFromDocument()
         {
             DumpImages(
                 @"D:\personal\",
@@ -106,7 +92,7 @@ namespace EditPDF
         }
 
 
-        public static void DumpTextInDocument()
+        public static void DumpTextFromDocument()
         {
             string filePath = @"D:\personal\source.pdf";
 
@@ -131,6 +117,44 @@ namespace EditPDF
             string destinationFilePath = @"source - rotated.pdf";
 
             RotatePages(SourceAndDestinationFolderPath, sourceFilePath, destinationFilePath, 270, 1, 2);
+        }
+
+
+        public static void MergeDocuments()
+        {
+            var SourceAndDestinationFolderPath = @"D:\personal\";
+
+            PdfMergerExtensions.MergeDocumentsInFolder(
+                SourceAndDestinationFolderPath,
+
+                "dest.pdf",
+
+                "source003.pdf",
+                "source004.pdf",
+                "source005.pdf"
+            );
+        }
+        public static void MergeEvenAndOddPages()
+        {
+            const string SourceAndDestinationFolderPath = @"D:\personal\";
+            const string SourceFileName1 = @"odd pages.pdf";
+            const string SourceFileName2 = @"even pages.pdf";
+            const int NumberOfPages = 10;
+
+            var SourceFileNameAndPagePairs = new List<(string, int)>();
+            for (int i = 1; i <= NumberOfPages; i++)
+            {
+                SourceFileNameAndPagePairs.Add((SourceFileName1, i));
+                SourceFileNameAndPagePairs.Add((SourceFileName2, i));
+            }
+
+            PdfMergerExtensions.MergeDocumentsInFolder(
+                SourceAndDestinationFolderPath,
+
+                "dest.pdf",
+
+                SourceFileNameAndPagePairs.ToArray()
+            );
         }
     }
 }
