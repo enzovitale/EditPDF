@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\hlpCode\hlpCode.csproj" />
+    <ProjectReference Include="$(SolutionDir)\hlpCode\hlpCode.csproj" />
+    <ProjectReference Include="$(SolutionDir)\hlpPDF\hlpPDF.csproj" />
   </ItemGroup>
 
 </Project>

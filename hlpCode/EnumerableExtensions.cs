@@ -2,10 +2,9 @@
 using System.Linq;
 
 
-namespace Helpers
+namespace Helpers;
+
+public static class EnumerableExtensions
 {
-    public static class EnumerableExtensions
-    {
-        public static IEnumerable<(T item, int position)> AppendOrdinal<T>(this IEnumerable<T> sequence) => sequence.Select((item, index) => (item, index));
-    }
+    public static IEnumerable<(T item, int position)> AppendOrdinal<T>(this IEnumerable<T> sequence) => sequence.Select((item, index) => (item, index));
 }
