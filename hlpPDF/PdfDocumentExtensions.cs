@@ -121,6 +121,7 @@ public static class PdfDocumentExtensions
     }
     #endregion
 
+
     #region DumpImages
     public static void DumpImages(
         this PdfDocument pdfDoc,
@@ -153,7 +154,26 @@ public static class PdfDocumentExtensions
     }
     #endregion
 
+
     #region CreateDocumentFromImage
+    public static void CreateDocumentsFromImages(
+        string sourceAndDestinationFolderPath,
+        string searchPattern
+    )
+    {
+        foreach (var iSourceFilePath in Directory.EnumerateFiles(sourceAndDestinationFolderPath, searchPattern))
+            CreateDocumentFromImage(sourceAndDestinationFolderPath, Path.GetFileName(iSourceFilePath));
+    }
+    public static void CreateDocumentFromImage(
+        string sourceAndDestinationFolderPath,
+        string sourceFileName
+    )
+    {
+        var sourceImageFileFullPath = Path.Combine(sourceAndDestinationFolderPath, sourceFileName);
+        var destinationFileFullPath = sourceImageFileFullPath.Replace(Path.GetExtension(sourceImageFileFullPath), ".pdf");
+
+        CreateDocumentFromImage(sourceImageFileFullPath, destinationFileFullPath, RotationAngle.None);
+    }
     public static void CreateDocumentFromImage(
         string sourceImageFileFullPath,
         string destinationFileFullPath,
@@ -163,7 +183,7 @@ public static class PdfDocumentExtensions
         CreateDocumentFromImage(sourceImageFileFullPath, destinationFileFullPath, Angle.ToRadians());
     }
     public static void CreateDocumentFromImage(
-        string sourceImageFileFullPath, 
+        string sourceImageFileFullPath,
         string destinationFileFullPath,
         double? radAngle = null
     )
@@ -174,7 +194,7 @@ public static class PdfDocumentExtensions
         CreateDocumentFromImage(image, destinationFileFullPath);
     }
     public static void CreateDocumentFromImage(
-        iText.Layout.Element.Image image, 
+        iText.Layout.Element.Image image,
         string destinationFileFullPath
     )
     {
@@ -189,14 +209,14 @@ public static class PdfDocumentExtensions
     }
     #endregion
 
-    #region DumpText
-    public static IEnumerable<string> DumpText(this PdfDocument pdfDoc)
-    {
-        var strategy = new SimpleTextExtractionStrategy();
 
-        foreach (var iPage in pdfDoc.GetPages())
-            yield return PdfTextExtractor.GetTextFromPage(iPage, strategy);
-    }
+    #region DumpText
+    public static IEnumerable<string> DumpText(
+        string sourceFolderPath,
+        string sourceFileName
+    )
+        => DumpText(Path.Combine(sourceFolderPath, sourceFileName));
+
     public static IEnumerable<string> DumpText(
         string sourceFilePath
     )
@@ -206,48 +226,49 @@ public static class PdfDocumentExtensions
         pdfDoc.Close();
         return result;
     }
-    public static IEnumerable<string> DumpText(
-        string sourceFolderPath,
-        string sourceFileName
-    )
+
+    public static IEnumerable<string> DumpText(this PdfDocument pdfDoc)
     {
-        return DumpText(Path.Combine(sourceFolderPath, sourceFileName));
+        var strategy = new SimpleTextExtractionStrategy();
+
+        foreach (var iPage in pdfDoc.GetPages())
+            yield return PdfTextExtractor.GetTextFromPage(iPage, strategy);
     }
     #endregion
+
 
     #region ExtractPages
     public static void ExtractPages(
         string sourceAndDestinationFolderPath,
         string sourceFileName,
-        string destinationFileName,
-        params int[] pageNumbers
-    ) => ExtractPages(
-        Path.Combine(sourceAndDestinationFolderPath, sourceFileName),
-        Path.Combine(sourceAndDestinationFolderPath, destinationFileName ?? sourceFileName.Replace(".pdf", ".extracted.pdf")),
-        pageNumbers
-    );
+        params IEnumerable<(string destinationFileName, IEnumerable<int> pageNumbers)> destinationPairs
+    )
+    {
+        foreach (var (destinationFileName, pageNumbers) in destinationPairs)
+            ExtractPages(
+                sourceAndDestinationFolderPath,
+                sourceFileName,
+                destinationFileName,
+                pageNumbers
+            );
+    }
+
     public static void ExtractPages(
         string sourceAndDestinationFolderPath,
         string sourceFileName,
         string destinationFileName,
-        IEnumerable<int> pageNumbers
-    ) => ExtractPages(
-        Path.Combine(sourceAndDestinationFolderPath, sourceFileName),
-        Path.Combine(sourceAndDestinationFolderPath, destinationFileName),
-        pageNumbers.AsEnumerable()
-    );
-
-
-    public static void ExtractPages(
-        string sourceFileFullPath,
-        string destinationFileFullPath,
-        params int[] pageNumbers
-    ) => ExtractPages(sourceFileFullPath, destinationFileFullPath, pageNumbers.AsEnumerable());
+        params IEnumerable<int> pageNumbers
+    )
+        => ExtractPages(
+            Path.Combine(sourceAndDestinationFolderPath, sourceFileName),
+            Path.Combine(sourceAndDestinationFolderPath, destinationFileName ?? sourceFileName.Replace(".pdf", ".extracted.pdf")),
+            pageNumbers
+        );
 
     public static void ExtractPages(
         string sourceFileFullPath,
         string destinationFileFullPath,
-        IEnumerable<int> pageNumbers
+        params IEnumerable<int> pageNumbers
     )
     {
         var sourceDoc = GetReadOnlyPdfDocument(sourceFileFullPath);
@@ -260,20 +281,14 @@ public static class PdfDocumentExtensions
     }
     #endregion
 
+
     #region RotatePages
     public static void RotatePages(
         string sourceAndDestinationFolderPath,
         string sourceFileName,
         string destinationFileName,
         int angle,
-        params int[] pageNumbers
-    ) => RotatePages(sourceAndDestinationFolderPath, sourceFileName, destinationFileName, angle, pageNumbers.AsEnumerable());
-    public static void RotatePages(
-        string sourceAndDestinationFolderPath,
-        string sourceFileName,
-        string destinationFileName,
-        int angle,
-        IEnumerable<int> pageNumbers
+        params IEnumerable<int> pageNumbers
     )
         => RotatePages(
             Path.Combine(sourceAndDestinationFolderPath, sourceFileName),
@@ -282,18 +297,11 @@ public static class PdfDocumentExtensions
             pageNumbers
         );
 
-
     public static void RotatePages(
         string sourceFileFullPath,
         string destinationFileFullPath,
         int angle,
-        params int[] pageNumbers
-    ) => RotatePages(sourceFileFullPath, destinationFileFullPath, angle, pageNumbers.AsEnumerable());
-    public static void RotatePages(
-        string sourceFileFullPath,
-        string destinationFileFullPath,
-        int angle,
-        IEnumerable<int> pageNumbers
+        params IEnumerable<int> pageNumbers
     )
     {
         var pdfDoc = GetReadWritePdfDocument(sourceFileFullPath, destinationFileFullPath);

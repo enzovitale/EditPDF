@@ -4,6 +4,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 
+using static Helpers.ImageExtensions.RotationAngle;
+
 
 namespace Helpers;
 
@@ -48,10 +50,10 @@ public static class ImageExtensions
     public static int ToDegrees(this RotationAngle angle) 
         => angle switch
         {
-            RotationAngle.None => 0,
-            RotationAngle.NinetyDegreesClockwise => 90,
-            RotationAngle.NinetyDegreesCounterClockwise => 270,
-            RotationAngle.HundredEightyDegrees => 180,
+            None => 0,
+            NinetyDegreesClockwise => 90,
+            NinetyDegreesCounterClockwise => 270,
+            HundredEightyDegrees => 180,
 
             _ => throw new ArgumentException()
         };
@@ -59,10 +61,10 @@ public static class ImageExtensions
     public static double ToRadians(this RotationAngle angle)
         => angle switch
         {
-            RotationAngle.None => 0,
-            RotationAngle.NinetyDegreesClockwise => Math.PI / 2,
-            RotationAngle.NinetyDegreesCounterClockwise => - Math.PI / 2,
-            RotationAngle.HundredEightyDegrees => Math.PI,
+            None => 0,
+            NinetyDegreesClockwise => Math.PI / 2,
+            NinetyDegreesCounterClockwise => - Math.PI / 2,
+            HundredEightyDegrees => Math.PI,
 
             _ => throw new ArgumentException()
         };

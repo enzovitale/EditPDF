@@ -1,5 +1,4 @@
-﻿
-using Helpers;
+﻿using Helpers;
 
 using iText.IO.Image;
 using iText.Kernel.Pdf;

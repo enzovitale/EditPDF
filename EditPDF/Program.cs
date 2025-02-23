@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Font;
@@ -8,29 +9,35 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 
-using static EditPDF.PdfDocumentExtensions;
-
 using static Helpers.ImageExtensions;
+
+using static EditPDF.PdfDocumentExtensions;
 
 
 namespace EditPDF;
 
 class Program
 {
+    private readonly static string SourceAndDestinationFolderPath = @"myFolder\";
+
     static void Main(string[] args)
     {
         Console.WriteLine("Hello World!");
 
-        ResizeImagesInDocument();
+        if (false) ResizeImagesInDocument();
         if (false) DumpImagesFromDocument();
         if (false) CreateNewDocument();
         if (false) DumpTextFromDocument();
         if (false) ExtractPagesFromDocument();
         if (false) RotatePagesFromDocument();
+
         if (false) MergeDocuments();
         if (false) MergeEvenAndOddPages();
-        if (false) CreateDocumentFromImage();
+
+        CreateDocumentFromImage();
+        if (false) CreateDocumentsFromImages();
     }
+
 
     public static void CreateNewDocument()
     {
@@ -77,11 +84,9 @@ class Program
 
     public static void ResizeImagesInDocument()
     {
-        var FolderPath = @"D:\personal\";
-
         ResizeImages(
-            Path.Combine(FolderPath, "myFile.pdf"),
-            1.0
+            Path.Combine(SourceAndDestinationFolderPath, "myFile.pdf"),
+            0.8
         );
     }
 
@@ -89,7 +94,7 @@ class Program
     public static void DumpImagesFromDocument()
     {
         DumpImages(
-            @"D:\personal\",
+            SourceAndDestinationFolderPath,
             "myFile.pdf"
         );
     }
@@ -107,17 +112,17 @@ class Program
 
     public static void ExtractPagesFromDocument()
     {
-        var SourceAndDestinationFolderPath = @"D:\personal\";
         string sourceFilePath = @"myFile.pdf";
         string destinationFilePath = @"myFile.pdf";
 
-        ExtractPages(SourceAndDestinationFolderPath, sourceFilePath, destinationFilePath, 12);
+        ExtractPages(SourceAndDestinationFolderPath, sourceFilePath,
+            (sourceFilePath.Replace(".pdf", " - extracted.pdf"), [8])
+        );
     }
 
 
     public static void RotatePagesFromDocument()
     {
-        var SourceAndDestinationFolderPath = @"D:\personal\";
         string sourceFilePath = @"myFile.pdf";
         string destinationFilePath = sourceFilePath.Replace(".pdf", " - rotated.pdf");
 
@@ -127,25 +132,23 @@ class Program
 
     public static void MergeDocuments()
     {
-        var SourceAndDestinationFolderPath = @"D:\personal\";
-
         PdfMergerExtensions.MergeDocumentsInFolder(
             SourceAndDestinationFolderPath,
 
-            "myFile.pdf",
+            "myDestination.pdf",
 
-            "myFile.pdf",
-            "myFile.pdf"
+            "mySource - p1.pdf",
+            "mySource - p2.pdf"
         );
     }
     public static void MergeEvenAndOddPages()
     {
-        const string SourceAndDestinationFolderPath = @"D:\personal\";
         const string SourceFileName1 = @"odd pages.pdf";
         const string SourceFileName2 = @"even pages.pdf";
         const int NumberOfPages = 10;
 
         var SourceFileNameAndPagePairs = new List<(string, int)>();
+
         for (int i = 1; i <= NumberOfPages; i++)
         {
             SourceFileNameAndPagePairs.Add((SourceFileName1, i));
@@ -164,11 +167,13 @@ class Program
 
     public static void CreateDocumentFromImage()
     {
-        var SourceAndDestinationFolderPath = @"D:\personal\";
+        var SourceFileName = Path.Combine(SourceAndDestinationFolderPath, "myFile.jpg");
 
-        var imageFile = Path.Combine(SourceAndDestinationFolderPath, "myFile.jpg");
-        var dest = imageFile.Replace(Path.GetExtension(imageFile), ".pdf");
+        PdfDocumentExtensions.CreateDocumentFromImage(SourceAndDestinationFolderPath, SourceFileName);
+    }
 
-        PdfDocumentExtensions.CreateDocumentFromImage(imageFile, dest, RotationAngle.NinetyDegreesCounterClockwise);
+    public static void CreateDocumentsFromImages()
+    {
+        PdfDocumentExtensions.CreateDocumentsFromImages(SourceAndDestinationFolderPath, "*.jpg");
     }
 }
